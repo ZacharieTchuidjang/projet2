@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messagerie(Courriel)</title>
+    <link rel="icon" href="images/favicon.png">
+    <link rel="stylesheet" href="courriel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="forge.min.js"></script>
+</head>
+<body onload="chargement()">
+    <div id="titre">
+        <h1>
+            Messagerie(Courriel)
+        </h1>
+    </div>
+    <div id="application">
+        <div id="menu">
+            <div class="boutton_compose">
+                <button value="Nouveau" class="boutton_compo" onclick="appearNewMessage()"> <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                    <span> Nouveau Message</span></button>
+            </div>
+            <div class="liste_element">
+                <ul class="liste_item">
+                    <li id="lien"> <a href="#" class="lien" onclick="chargement()"><i class="fa fa-envelope-o icon" aria-hidden="true"></i>
+                        Boite de reception  </a> </li>
+                    <!-- <li> <a href="#" class="lien" onclick="click_Me()"><i class="fa fa-paper-plane-o icon" aria-hidden="true"></i>
+                        Messages envoyés </a> </li> -->
+                </ul>
+            </div>
+            <div class="list_contacts">
+                <h3 class="titre_contact">Contacts</h3>
+                <ul class="liste_item">
+                        <li id="lien"> <a href="#" class="lien" onclick="click_Lc()" ><i class="fa fa-address-book-o icon" aria-hidden="true"></i>
+                            Liste des Contacts  </a> </li>
+                        <li> <a href="#" class="lien" onclick="click_Lc()"><i class="fa fa-plus-square-o fa-lg icon" aria-hidden="true"></i>
+                            Nouveau Contact </a> </li>
+                </ul>
+            </div>
+        </div>
+        <div id="liste">
+            <div>
+                <div class="recherche">
+                    <input type="text" id="recherche" placeholder="Recherche">
+                    <button onclick="rechercher()"><i class="fa fa-search" aria-hidden="true"></i></button>
+                </div>
+                <div class="liste_contact">
+                    <div class="container" id="liste_contact">
+                        <div class="contact" id="contact1">
+                            <a href="#" class="lien" id="contact_1" onclick="clickDivC(id)">
+                            <i class="fa fa-user" aria-hidden="true"></i>  
+                            <p> Nom du contact 1</p>
+                            </a>
+                            <i class="fa fa-trash-o" aria-hidden="true" id="trash_1" onclick="deleteC(id)"></i>
+                        </div>
+                        <div class="contact" id="contact2">
+                            <a href="#" class="lien" id="contact_2"onclick="clickDivC(id)">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                                
+                            <p> Nom du contact </p>
+                        </a>
+                        <i class="fa fa-trash-o" id="trash_2" aria-hidden="true" onclick="deleteC(id)"></i>
+                        </div>
+                    </div>
+                    <div class="container" id="liste_mr">
+                        <div class="contact">
+                            <a href="#" class="lien" id="message1" onclick="clickDiv(id)">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <div>
+                                
+                            <h4>Zacharie Jonas</h4>
+                            <h6>Sujet du message</h6>
+                            </div>
+                            <p>Lorem ipsum dolor Salut  , sit amet consectetur adipisicing elit. Quibusdam error magni cupiditate magnam. Maiores debitis, iusto atque ad dolore laboriosam illo tempore? Porro, deserunt ullam. At reiciendis quam soluta maxime.</p>
+                        </a>
+                        </div>
+                        <div class="contact">
+                            <a href="#" class="lien" id="message2" onclick="clickDiv(id)">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <div>
+                                
+                            <h4>Duplex Junior</h4>
+                            <h6>Sujet du message</h6>
+                            </div>
+                            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam error magni cupiditate magnam. Maiores debitis, iusto atque ad dolore laboriosam illo tempore? Porro, deserunt ullam. At reiciendis quam soluta maxime.</p>
+                            </a>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+        <div id="zone_text">
+            <div class="Message">
+                <div>
+                    <h1>Nom du contact</h1>
+                </div>
+                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quibusdam error magni cupiditate magnam. Maiores debitis, iusto atque ad dolore laboriosam illo tempore? Porro, deserunt ullam. At reiciendis quam soluta maxime.</p>    
+            </div>
+            <div class="Ecrire_un_Message">
+                <h1> Nouveau Message</h1>
+                <div>
+                    <form action="">
+                    
+                    
+                    <div>
+                        <label for="name">Choisissez votre destinataire: </label>
+                        <select name="pets" id="contact-select">
+                            <option value="">--Votre choix--</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="name">Entrer votre message: </label>
+                    <textarea id="story" name="story" rows="20" cols="100">
+                        It was a dark and stormy night...
+                    </textarea>
+                </div>
+                    <button onclick="newMessage()" value="envoyer">Envoyer</button>
+                    
+                    </form>
+                </div>
+            </div>
+            <div class="creer_contact"> 
+                <form action="">
+                    <label for="name">Entrer le nom de votre Contact: </label>
+                    <input type="text" name="name" id="name_contact" required>
+                    <button onclick="newContact()" value="nouveau">creer contact</button>
+                </form>
+            </div>
+            <div class="acceuil">
+
+            </div>
+        </div>
+    </div>
+    <script src="courriel.js"></script>
+</body>
+</html>

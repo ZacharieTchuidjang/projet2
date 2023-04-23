@@ -1,0 +1,112 @@
+#titre{
+    background-color: aqua;
+    border-radius: 5px;
+    margin-left: 10%;
+    margin-right: 10%;
+    text-align: center;
+    
+}
+body{
+    background-color: rgb(231, 241, 241);
+}
+
+#menu{
+    background-color: skyblue;
+    width: 500px;
+    border-right: solid 2px;
+    margin-left: 20px;
+    border-radius: 5% 0% 0% 5%;
+}
+
+#liste{
+    background-color: rgb(46, 123, 153);
+    width: 500px;
+    border-right: solid 2px;
+    margin-right: 1%;
+    margin-left:1%;
+}
+
+#zone_text{
+    border-right: solid 2px;
+    margin-right: 20px;
+    border-radius: 0% 5% 5% 0%;
+    background-color: white;
+}
+
+#application{
+    display: flex;
+    height: 600px;
+}
+
+.liste_item{
+    text-align: center;
+    padding: 20px 0;
+    list-style: none;
+    
+}
+.lien:link{
+    color: black;
+    text-decoration: none;    
+}
+.lien:active{
+    color: black;
+    text-decoration: none;    
+}
+.lien:hover{
+    color: black;
+    text-decoration: none;  
+}
+.lien:visited{
+    color: black;
+    text-decoration: none;    
+}
+.icon{
+    margin-right: 10px;
+}
+#lien{
+    margin-bottom: 25px;
+}
+.boutton_compo{
+    padding: 10px;
+    margin: 10px 0 0 10px;
+    border-radius: 10px;
+    background-color: red;
+}
+.nouveau_message{
+    width: 20px;
+}
+.boutton_compose{
+    display: flex;
+    
+}
+.recherche{
+    margin: 10px 0 0 10px;
+    display: flex;
+}
+.contact{
+    background-color: white;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 7px;
+    
+}
+
+.titre_contact{
+    text-align: center;
+    border-top: solid 1px;
+    padding-top: 7px;
+}
+
+.contact{
+    display: flex;
+}
+
+.container{
+    margin-top: 10px;
+    overflow: auto;
+    max-height: 550px;
+}
+
+#zone_text{
+    padding: 5%;
+}
