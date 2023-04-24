@@ -4,9 +4,27 @@ var div_list_message = document.querySelector(".Message");
 var div_form_newMessage = document.querySelector(".Ecrire_un_Message");
 var div_form_newContact = document.querySelector(".creer_contact");
 
+var role;
 
 var contacts = null;
 var messages = null;
+
+function chercher(element, messages){
+    for(var i = 0; i < messages.length; i++){
+        if(element.nom === messages[i].nom && element.PublicKey ===messages[i].PublicKey && element.PrivateKey ===messages[i].PrivateKey){
+            return true;
+        }
+    }
+    return false
+}
+
+function updateMessage(messages, messagesOtherServer){
+    for(var i = 0; i < messagesOtherServer.length; i++){
+        if(!chercher(messagesOtherServer[i], messages)){
+            messages.push(messagesOtherServer[i]);
+        }
+}
+}
 
 fetch('http://localhost:8991/messages')
 .then(res => res.json())
@@ -26,12 +44,37 @@ fetch('http://localhost:8991/recepteurs')
 contacts = JSON.parse(localStorage.getItem("contacts"))
 messages = JSON.parse(localStorage.getItem("messages"))
 
+
+role = JSON.parse(localStorage.getItem('role'))
+if(role === null){
+    var p = Math.floor(Math.random() * contacts.length)
+    role = contacts[p]
+    localStorage.setItem('role', JSON.stringify(role))
+}
+
 function chargement(){
     setManyDisplayNOne([liste_contact, div_form_newMessage, div_form_newContact]);
     setManyDisplayBlock([message_recu, div_list_message])
     setManyDisplayBlock(message_recu.children)
     select = document.getElementById("contact-select");
 
+    // Create WebSocket connection.
+const socket = new WebSocket("ws://localhost:8080");
+
+// Connection opened
+socket.addEventListener("open", (event) => {
+  socket.send("Hello Server!");
+  socket.send("contacts")
+});
+
+
+
+// Listen for messages
+socket.addEventListener("message", (event) => {
+    console.log("Message from server ", event.data.text);
+    updateMessage(contacts, event.data);
+  });
+    role = JSON.parse(localStorage.getItem('role'))
     // chargement des contacts
     for(var i = 0; i < contacts.length; i++){
 
@@ -74,10 +117,36 @@ function chargement(){
         select.appendChild(option);
     }
 
+    socket.addEventListener("open", (event) => {
+        socket.send("Hello Server!");
+        socket.send("message")
+      });
+
+
+    // Listen for messages
+socket.addEventListener("message", (event) => {
+    console.log("Message from server ", event.data);
+    updateMessage(messages, event.data); //synchronisation des messages
+  });
     // chargement des messages
 
+
     for(var i = 0; i < messages.length; i++){
-        div_contact = document.createElement("div");
+        
+        const publicKey = forge.pki.publicKeyFromPem(role.PublicKey);
+        const privateKey = forge.pki.privateKeyFromPem(role.PrivateKey);
+        var keyPair = { privateKey, publicKey };
+        var mesg;
+        var emet;
+        try {
+            mesg = forge.util.decodeUtf8(keyPair.privateKey.decrypt(forge.util.decode64(messages[i].message)));
+            emet = messages[i].emetteur;
+            console.log(mesg, emet)
+        } catch (error) {
+            
+        }
+        if(mesg !== undefined){
+            div_contact = document.createElement("div");
         div_contact.setAttribute("class", "contact");
         lien = document.createElement("a");
         lien.setAttribute("href", "#");
@@ -90,14 +159,16 @@ function chargement(){
         lien.appendChild(icone);
         sous_div = document.createElement("div");
         titre = document.createElement("h4");
-        titre.innerHTML = messages[i].emetteur;
+        titre.innerHTML = emet;
         sous_div.appendChild(titre);
         lien.appendChild(sous_div);
         div_contact.appendChild(lien);
         paragraphe = document.createElement("p");
-        paragraphe.innerHTML = messages[i].message;
+        paragraphe.innerHTML = mesg;
         lien.appendChild(paragraphe);
         document.getElementById("liste_mr").appendChild(div_contact);
+        }
+        
     }
     
 }
@@ -171,14 +242,6 @@ function newContact(){
         var contact = {"nom": nomContact, "PublicKey": forge.pki.publicKeyToPem(keypair.publicKey), "PrivateKey": forge.pki.privateKeyToPem(keypair.privateKey)};
         contacts.push(contact);
         localStorage.setItem("contacts", JSON.stringify(contacts));
-        //     fetch('http://localhost:8991/recepteurs/create', {
-        //     method: "POST",
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //       },
-        //     body: JSON.stringify(contact)
-        // })
-        // .then(res => console.log(res));
         fetch('http://localhost:8991/recepteurs/create/', {
             method: 'POST',
             headers: {
@@ -238,7 +301,7 @@ function notExist(element, liste){
     }
     return true
 }
-function newMessage(){
+async function newMessage(){
     nom_dest = document.getElementById("contact-select").value;
     var contact;
     for(var i=0; i < contacts.length; i++){
@@ -251,23 +314,22 @@ function newMessage(){
     const privateKey = forge.pki.privateKeyFromPem(contact.PrivateKey);
     var keyPair = { privateKey, publicKey };
     var story = document.getElementById("story").value;
-    console.log(story)
     story = forge.util.encode64(keyPair.publicKey.encrypt(forge.util.encodeUtf8(story)));
-    console.log(story)
-    messages.push({"emetteur": nom_dest, "message": story});
-    fetch('http://localhost:8991/messages/create/', {
+    messages.push({"emetteur": role.nom, "message": story});
+
+    localStorage.setItem("messages", JSON.stringify(messages));
+    await fetch('http://localhost:8991/messages/create/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({"emetteur": nom_dest, "message": story})
+            body: JSON.stringify({"emetteur": role.nom, "message": story})
         })
         .then(res => {
             return res.json()
         })
         .then(data => console.log(data))
     console.log(messages);
-    localStorage.setItem("messages", JSON.stringify(messages));
     exemple = JSON.parse(localStorage.getItem("messages"));
     console.log(exemple)
 

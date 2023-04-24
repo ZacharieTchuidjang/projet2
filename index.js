@@ -2,9 +2,14 @@ import express from "express";
 import { readFileSync } from "fs";
 import fs from "fs";
 import bodyParser from "body-parser";
-const app = express();
+import { WebSocketServer } from 'ws';
+import { createServer } from 'http';
 
+const app = express();
+const ws = new WebSocketServer({port: 8080});
 app.use(bodyParser.json())
+
+
 let packageJSON = JSON.parse(readFileSync("././messages.json"));
 
 var messages = packageJSON
@@ -74,6 +79,20 @@ const save = () => {
     }
   })
 }
+
+// Sockets 
+
+ws.on('connection', function connection(ws) {
+  ws.on('error', console.error);
+
+  ws.on('message', function message(data) {
+    if(data === "contacts"){
+      ws.send(contacts)
+    }else{
+      ws.send(messages)
+    }
+  });
+});
 
 const saveR = () => {
   fs.writeFile("./recepteurs.json", JSON.stringify(recepteurs, null, 2), err => {
